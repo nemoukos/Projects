@@ -8,8 +8,8 @@ const int FS = A0;              //Front sensor
 const int RS = A1;              //right sensor
 const int LS = A2;              //left sensor
 
-const int trigPin = 2;          //ais8hthras uperhxwn pompos
-const int echoPin = 3;          //ais8hthras uperhxwn dekths
+const int trigPin = 2;          //casting frequency
+const int echoPin = 3;          //reciever
 
 const int  btnSF = 9;         // the pin that the pushbutton is attached to
 const int ledPin = 13;       // the pin that the LED is attached to
@@ -164,7 +164,7 @@ int distanceFS() {
   }
 }
 
-  int MOdistanceF() {                   //metraei 5 fores thn apostash apo ta mprosta
+  int MOdistanceF() {                   //counts 5 times the distance from the front
   int MOdistanceFS = 0;
   for (int i = 0; i < 5; i++) {
     int z = distanceFS();
@@ -190,8 +190,8 @@ int FSvalue = analogRead(FS);
 int LSvalue = analogRead(LS);
 int RSvalue = analogRead(RS);
 
-int x = 15;                       //h apostash pou tha krataei apo to ebodio
-int y = MOdistanceF();            //o mesos oros apostashs apo brosta 
+int x = 15;                       //distance from obstacle
+int y = MOdistanceF();            //distance mod
 
 
   
