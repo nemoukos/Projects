@@ -1,22 +1,22 @@
-#include <Wire.h>                   //eisagoume vivliothikes gia ta hlektronika e3arthmata
-#include "Adafruit_MCP9808.h"       //ais8hthras thermokrasias
-#include <ShiftRegister74HC595.h>   //aparithmiths
+#include <Wire.h>                   //insert libraries
+#include "Adafruit_MCP9808.h"       //temperature senors
+#include <ShiftRegister74HC595.h>   //counter
 
 
 // this constant won't change:
-int outputA =6;           //exodos apo A thermostath
-int outputB =7;           //exodos apo B thermostath
-int ledPOWER = 9;         //led reumatos
-int ledON = 8;            //led leitourgeias
-int buttonPin=10;         //koubi allaghs
+int outputA =6;           //output A from thermostat
+int outputB =7;           //output B from thermostat
+int ledPOWER = 9;         //led power
+int ledON = 8;            //led funtion
+int buttonPin=10;         //change button
 bool bPress = false;
 
 // Variables will change:
 
-int buttonPushCounter=0;      //metrhths apo koubi
+int buttonPushCounter=0;      //button counter
 int buttonState=0;
 int lastButtonState=0;
-int counter=0;                //metrhths apo thermostath
+int counter=0;                //thermosta counter
 int aState;
 int aLastState;
 
@@ -25,7 +25,7 @@ int aLastState;
 Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 
 // create shift register object (number of shift registers, data pin, clock pin, latch pin)
-ShiftRegister74HC595 sr (4, 2, 3, 4);       //dhmiourgeia ari8mwn gia apeikonish 
+ShiftRegister74HC595 sr (4, 2, 3, 4);       //number creation for display 
 
 int value,digit1,digit2,digit3,digit4; 
 uint8_t  number0[] = {B11000000}; //0
@@ -107,7 +107,7 @@ if (aState != aLastState){
 
 aLastState = aState;
  
- int temp = tempsensor.readTempC() - 3 ;//diavazei thn thermokrasia
+ int temp = tempsensor.readTempC() - 3 ;//reads temperature
  
 
  if(counter > 0){
@@ -518,9 +518,9 @@ if (buttonPushCounter == 1 or buttonPushCounter == 3 or buttonPushCounter ==5 or
  }
 }
 if (counter >= temp){
-  analogWrite(ledON,200);
+  analogWrite(ledON,200);      // if the number of the counter is greater than the temperature sensor the led that show that is working turns on
 }
- else if(counter < temp){
+ else if(counter < temp){       // or else it runs off
   analogWrite(ledON,0);
 }
  }
