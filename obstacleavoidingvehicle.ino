@@ -1,20 +1,20 @@
 // pins apo ais8hthres
 
-const int trigPinF = 10; //brosta ais8hthras
-const int echoPinF = 11; //brosta ais8hthras
-const int trigPinR = 8;  //de3ios ais8hthras
-const int echoPinR = 7;  //de3ios ais8hthras
-const int trigPinL = 13; //aristeros ais8hthras
-const int echoPinL = 12; //aristeros ais8hthras
+const int trigPinF = 10; //front sensor trigger
+const int echoPinF = 11; //front sensor reciever
+const int trigPinR = 8;  //right sensor trigger
+const int echoPinR = 7;  //right sensor reciever
+const int trigPinL = 13; //left sensor trigger
+const int echoPinL = 12; //left sensor reciever
 
 
 //pins apo motors
-const int mtrRbackward = 2;  //de3ios kinhthras kinhsh brosta
-const int mtrRforward = 3;  //de3ios kinhthras kinhsh pisw
-const int mtrRPWM = 6;      //taxuthta pwm de3iou kinhthtra
-const int mtrLbackward = 4;  //aristeros kinhthras kinhsh brosta
-const int mtrLforward = 5;  //aristreos kinhthras kinhsh pisw
-const int mtrLPWM = 9 ;    //taxuthta pwm aristerou kinhthra
+const int mtrRbackward = 2;  //Right motor backward
+const int mtrRforward = 3;  //Right motor forward
+const int mtrRPWM = 6;      //speed pwm Right motor
+const int mtrLbackward = 4;  //left motor backward
+const int mtrLforward = 5;  //left motor  forward
+const int mtrLPWM = 9 ;    //speed pwm left motor
 
 // defines variables
 long duration;
@@ -216,8 +216,8 @@ int distanceLS() {
   }
 }
 
-int MOdistanceL() {                     //metraei 10 fores thn apostash apo ta aristera kai vgazei ton meso oro
-  int MOdistanceLS = 0;                 // to ekana gia na mhn lamvanoume ypopsh periptoseis pou o aisthhthras metraei laths
+int MOdistanceL() {                     //average of 10 reads
+  int MOdistanceLS = 0;                 // error exclusion
   for (int i = 0; i < 5; i++) {
     int z = distanceLS();
     if (z > 800) {
@@ -233,7 +233,7 @@ int MOdistanceL() {                     //metraei 10 fores thn apostash apo ta a
 
 
 
-int MOdistanceR() {                   //metraei 10 fores thn apostash apo ta deksia
+int MOdistanceR() {                   //10times average from right
   int MOdistanceRS = 0;
   for (int i = 0; i < 5; i++) {
     int z = distanceRS();
@@ -248,7 +248,7 @@ int MOdistanceR() {                   //metraei 10 fores thn apostash apo ta dek
   return MOdistanceRS;
 }
 
-int MOdistanceF() {                   //metraei 10 fores thn apostash apo ta mprosta
+int MOdistanceF() {                   //10 times average from front
   int MOdistanceFS = 0;
   for (int i = 0; i < 5; i++) {
     int z = distanceFS();
@@ -264,22 +264,22 @@ int MOdistanceF() {                   //metraei 10 fores thn apostash apo ta mpr
 }
 
 void loop() {
-  int x = 15;                          //h apostash pou tha krataei apo ton toixo
-  int z = MOdistanceR();               //vazo to apotelesma ton synarthseon mesa se metavlhtes gia na mporo na ta xreisimopoihso sto if
+  int x = 15;                          //distance from object
+  int z = MOdistanceR();               //
   int y = MOdistanceF();
   int a = x - 2;
   int b = x + 2;
   //Serial.println(z);
-  if (y > x) {                         // an h apostash apo mprosta einai megalhterh apo to x tote
+  if (y > x) {                         // if the distance from the front is greater than x
 
-    if (z > a and  z < b) {            // an h apostash apo deksia einai ish me x(2 pano 2 kato)
-      motorsRforward();                // tote proxora mrposta
+    if (z > a and  z < b) {            // if distance from the from and right +-2
+      motorsRforward();                // then move forward
       motorsLforward();
       delay(200);
       breakRobot();
 
     }
-    else if (z >= b) {                 // allios an h apostash einai megalyterh
+    else if (z >= b) {                 // if distance is greater
       if (CH == true) {
         //Serial.print(CH);
         right(200);
@@ -289,17 +289,17 @@ void loop() {
 
       }
       else {
-        right(200);                    // stripse ligo deksia
-        motorsRforward();              // tote proxora mrposta
+        right(200);                    // turn right
+        motorsRforward();              // moveforward
         motorsLforward();
         delay(100);
         left(205);
         breakRobot();
       }
     }
-    else if (z <= a ) {                //allios an h apostash einai mikroterh
-      left(200);                       // stripse ligo aristera
-      motorsRforward();                // tote proxora mrposta
+    else if (z <= a ) {                //if distance is smaller
+      left(200);                       // turn left
+      motorsRforward();                // forward
       motorsLforward();
       delay(200);
 
@@ -308,9 +308,9 @@ void loop() {
 
     }
   }
-  else {                               // an h apostash apo mprosta den einai megalhterh tou x
-    breakRobot();                      //stamata
-    if (y <= x ) {                     //mexri na dei to empodio pou exei mprosta apo ton deksia aisthhthra strive aristera
+  else {                               // if the distance from the front is greater  than x
+    breakRobot();                      //stop
+    if (y <= x ) {                     //till you see the obstacle
       CH = true;
       left(1250);
       breakRobot();
